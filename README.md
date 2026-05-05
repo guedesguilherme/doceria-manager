@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Doceria Manager
 
-## Getting Started
+Sistema de gestão completo para doceria/confeitaria artesanal.
 
-First, run the development server:
+## Funcionalidades
+
+- **Ingredientes** - CRUD com cálculo automático de custo por unidade
+- **Receitas** - CRUD com suporte a sub-receitas e custo automático
+- **Custos Indiretos** - Gestão de custos fixos e variáveis
+- **Precificação** - Cálculo de preço com slider de markup (1x-5x)
+- **Pedidos** - CRUD completo com gestão de status
+- **Agenda** - Visão semanal dos pedidos por data de entrega
+- **PWA** - Funciona como aplicativo no celular
+
+## Stack
+
+- **Next.js 15** (App Router)
+- **Turso** (SQLite na nuvem) + **libsql**
+- **Drizzle ORM**
+- **Tailwind CSS** + **shadcn/ui**
+- **TypeScript**
+
+## Setup
+
+### 1. Criar banco de dados no Turso
+
+```bash
+# Instalar CLI do Turso
+curl -sSfL https://get.tur.so/install.sh | bash
+
+# Login
+turso auth login
+
+# Criar banco
+turso db create doceria-manager
+
+# Pegar URL do banco
+turso db show doceria-manager --url
+
+# Criar token de acesso
+turso db tokens create doceria-manager
+```
+
+### 2. Configurar variáveis de ambiente
+
+```bash
+cp .env.example .env.local
+# Editar .env.local com suas credenciais do Turso
+```
+
+### 3. Instalar dependências
+
+```bash
+npm install
+```
+
+### 4. Criar tabelas e popular banco
+
+Acesse a URL `/api/seed` no browser após subir o servidor para criar as tabelas e inserir dados de exemplo:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Acesse: http://localhost:3000/api/seed
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 5. Rodar o projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Acesse: http://localhost:3000
 
-## Learn More
+## Estrutura do Projeto
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # Route Handlers
+│   │   ├── ingredientes/
+│   │   ├── receitas/
+│   │   ├── custos/
+│   │   ├── pedidos/
+│   │   ├── precificacao/
+│   │   └── seed/
+│   ├── ingredientes/      # CRUD de ingredientes
+│   ├── receitas/          # CRUD de receitas
+│   ├── custos/            # Custos indiretos
+│   ├── precificacao/      # Calculadora de precos
+│   ├── pedidos/           # CRUD de pedidos
+│   └── page.tsx           # Agenda (pagina principal)
+├── components/
+│   ├── ui/                # Componentes shadcn/ui
+│   ├── layout/            # Sidebar e Header
+│   └── pwa-register.tsx   # Registro do Service Worker
+├── db/
+│   ├── index.ts           # Conexao com banco
+│   ├── schema.ts          # Schema Drizzle
+│   ├── migrate.ts         # Migrations manuais
+│   └── seed.ts            # Dados de exemplo
+└── lib/
+    ├── utils.ts           # Utilitarios
+    └── calculations.ts    # Funcoes de calculo de custo
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Variaveis de Ambiente
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variavel | Descricao |
+|----------|-----------|
+| TURSO_DATABASE_URL | URL do banco Turso (ex: libsql://...turso.io) |
+| TURSO_AUTH_TOKEN | Token de autenticacao do Turso |
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O projeto esta pronto para deploy na Vercel:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Conecte o repositorio na Vercel
+2. Configure as variaveis de ambiente
+3. Deploy automatico a cada push na branch main

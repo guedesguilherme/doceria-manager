@@ -1,65 +1,285 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState, useEffect } from 'react'
+import { format, startOfWeek, addDays, isSameDay, isToday } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { formatCurrency } from '@/lib/utils'
+import { CalendarDays, Clock, User, Package } from 'lucide-react'
+import Link from 'next/link'
+
+type OrderItem = {
+  id: number
+  recipeName: string | null
+  quantity: number
+  unitPrice: number
+}
+
+type Order = {
+  id: number
+  customerName: string
+  whatsapp: string | null
+  address: string | null
+  deliveryDatetime: string
+  deliveryType: 'entrega' | 'retirada'
+  notes: string | null
+  status: string
+  signalAmount: number | null
+  totalAmount: number | null
+  items: OrderItem[]
+}
+
+type FilterType = 'hoje' | 'semana' | 'todos'
+
+function getStatusBadgeVariant(status: string): 'warning' | 'info' | 'success' | 'muted' | 'outline' {
+  switch (status) {
+    case 'Pendente': return 'warning'
+    case 'Em produção': return 'info'
+    case 'Pronto': return 'success'
+    case 'Entregue': return 'muted'
+    default: return 'outline'
+  }
+}
+
+function OrderCard({ order, highlight }: { order: Order; highlight: boolean }) {
+  const deliveryDate = new Date(order.deliveryDatetime)
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className={`bg-white rounded-lg p-3 border shadow-sm ${highlight ? 'border-pink-400 border-2' : 'border-pink-100'}`}>
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <User className="w-3.5 h-3.5 text-pink-500 flex-shrink-0" />
+          <span className="font-semibold text-sm text-gray-900 truncate">{order.customerName}</span>
+        </div>
+        <Badge variant={getStatusBadgeVariant(order.status)} className="text-xs flex-shrink-0">
+          {order.status}
+        </Badge>
+      </div>
+
+      <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+        <Clock className="w-3 h-3" />
+        <span>{format(deliveryDate, 'HH:mm')}</span>
+        <span className="text-pink-300">•</span>
+        <span>{order.deliveryType === 'entrega' ? 'Entrega' : 'Retirada'}</span>
+      </div>
+
+      {order.items && order.items.length > 0 && (
+        <div className="mt-1.5">
+          {order.items.slice(0, 2).map((item, i) => (
+            <div key={i} className="flex items-center gap-1 text-xs text-gray-600">
+              <Package className="w-3 h-3 text-pink-400" />
+              <span>{item.quantity}x {item.recipeName}</span>
+            </div>
+          ))}
+          {order.items.length > 2 && (
+            <span className="text-xs text-gray-400">+{order.items.length - 2} item(s)</span>
+          )}
+        </div>
+      )}
+
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-xs font-semibold text-pink-700">
+          {formatCurrency(order.totalAmount ?? 0)}
+        </span>
+        <Link href={`/pedidos/${order.id}`}>
+          <Button variant="ghost" size="sm" className="text-xs h-6 px-2">
+            Ver
+          </Button>
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+export default function AgendaPage() {
+  const [orders, setOrders] = useState<Order[]>([])
+  const [filter, setFilter] = useState<FilterType>('semana')
+  const [loading, setLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [])
+
+  async function fetchOrders() {
+    try {
+      const res = await fetch('/api/pedidos')
+      if (res.ok) {
+        const data = await res.json()
+        setOrders(data)
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const today = new Date()
+  const weekStart = startOfWeek(today, { weekStartsOn: 1 })
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
+
+  function getOrdersForDay(day: Date) {
+    return orders
+      .filter(order => {
+        const orderDate = new Date(order.deliveryDatetime)
+        return isSameDay(orderDate, day)
+      })
+      .sort((a, b) => new Date(a.deliveryDatetime).getTime() - new Date(b.deliveryDatetime).getTime())
+  }
+
+  function getFilteredOrders() {
+    if (filter === 'hoje') {
+      return orders.filter(order => isSameDay(new Date(order.deliveryDatetime), today))
+    }
+    if (filter === 'semana') {
+      return orders.filter(order => {
+        const d = new Date(order.deliveryDatetime)
+        return d >= weekStart && d <= addDays(weekStart, 6)
+      })
+    }
+    return orders
+  }
+
+  const daysToShow = isMobile
+    ? [today]
+    : filter === 'hoje'
+      ? [today]
+      : weekDays
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-pink-400 text-sm">Carregando agenda...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Agenda</h1>
+          <p className="text-sm text-gray-500">
+            {format(today, "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="flex gap-2 flex-wrap">
+          <div className="flex rounded-lg border border-pink-200 overflow-hidden">
+            {(['hoje', 'semana', 'todos'] as FilterType[]).map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                  filter === f
+                    ? 'bg-pink-600 text-white'
+                    : 'bg-white text-gray-600 hover:bg-pink-50 hover:text-pink-700'
+                }`}
+              >
+                {f === 'hoje' ? 'Hoje' : f === 'semana' ? 'Esta semana' : 'Todos'}
+              </button>
+            ))}
+          </div>
+
+          <Link href="/pedidos/novo">
+            <Button size="sm" className="text-sm">
+              + Novo Pedido
+            </Button>
+          </Link>
         </div>
-      </main>
+      </div>
+
+      {filter === 'todos' ? (
+        <div className="space-y-3">
+          {getFilteredOrders().length === 0 ? (
+            <div className="text-center py-16 text-gray-400">
+              <CalendarDays className="w-12 h-12 mx-auto mb-3 text-pink-200" />
+              <p>Nenhum pedido encontrado</p>
+              <Link href="/pedidos/novo">
+                <Button variant="outline" className="mt-3 text-sm">
+                  Criar primeiro pedido
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            getFilteredOrders().map(order => (
+              <div key={order.id} className="bg-white rounded-lg p-4 border border-pink-100 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-gray-900">{order.customerName}</span>
+                      <Badge variant={getStatusBadgeVariant(order.status)}>
+                        {order.status}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-gray-500 mt-1 flex-wrap">
+                      <span className="flex items-center gap-1">
+                        <CalendarDays className="w-3.5 h-3.5" />
+                        {format(new Date(order.deliveryDatetime), "dd/MM 'às' HH:mm")}
+                      </span>
+                      <span>{order.deliveryType === 'entrega' ? 'Entrega' : 'Retirada'}</span>
+                    </div>
+                    {order.items && (
+                      <div className="text-sm text-gray-600 mt-1">
+                        {order.items.map(i => `${i.quantity}x ${i.recipeName}`).join(', ')}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="font-semibold text-pink-700">{formatCurrency(order.totalAmount ?? 0)}</div>
+                    <Link href={`/pedidos/${order.id}`}>
+                      <Button variant="ghost" size="sm" className="mt-1">Ver</Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      ) : (
+        <div className={`grid gap-3 ${daysToShow.length > 1 ? 'grid-cols-2 md:grid-cols-4 lg:grid-cols-7' : 'grid-cols-1 max-w-sm mx-auto w-full'}`}>
+          {daysToShow.map((day) => {
+            const dayOrders = getOrdersForDay(day)
+            const todayDay = isToday(day)
+            return (
+              <div
+                key={day.toISOString()}
+                className={`rounded-xl p-2 min-h-[120px] ${
+                  todayDay ? 'bg-pink-50 border-2 border-pink-200' : 'bg-white border border-pink-100'
+                }`}
+              >
+                <div className={`text-center mb-2 pb-2 border-b ${todayDay ? 'border-pink-200' : 'border-pink-50'}`}>
+                  <div className={`text-xs font-medium uppercase ${todayDay ? 'text-pink-600' : 'text-gray-400'}`}>
+                    {format(day, 'EEE', { locale: ptBR })}
+                  </div>
+                  <div className={`text-lg font-bold ${todayDay ? 'text-pink-700' : 'text-gray-700'}`}>
+                    {format(day, 'd')}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {dayOrders.length === 0 ? (
+                    <p className="text-xs text-gray-300 text-center py-2">—</p>
+                  ) : (
+                    dayOrders.map(order => (
+                      <OrderCard key={order.id} order={order} highlight={todayDay} />
+                    ))
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
-  );
+  )
 }
