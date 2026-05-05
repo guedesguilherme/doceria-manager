@@ -35,7 +35,7 @@ export function Sidebar() {
           width={160}
           height={56}
           priority
-          className="object-contain"
+          className="object-contain mix-blend-multiply"
         />
       </div>
 

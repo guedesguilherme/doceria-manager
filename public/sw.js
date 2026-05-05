@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doceria-manager-v1';
+const CACHE_NAME = 'mm-bolos-v2';
 const STATIC_ASSETS = [
   '/',
   '/ingredientes',
@@ -64,6 +64,12 @@ self.addEventListener('fetch', (event) => {
           });
         })
     );
+    return;
+  }
+
+  // Never cache Next.js built chunks — they change on every deploy
+  if (url.pathname.startsWith('/_next/')) {
+    event.respondWith(fetch(request));
     return;
   }
 
