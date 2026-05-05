@@ -1,11 +1,11 @@
 {
-  "name": "Doceria Manager",
-  "short_name": "Doceria",
-  "description": "Sistema de gestão para doceria",
+  "name": "MM Bolos",
+  "short_name": "MM Bolos",
+  "description": "Sistema de gestão para confeitaria",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ec4899",
+  "background_color": "#eff6ff",
+  "theme_color": "#60a5fa",
   "orientation": "portrait-primary",
   "icons": [
     {

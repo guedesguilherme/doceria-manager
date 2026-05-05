@@ -70,7 +70,7 @@ export default function IngredientsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-pink-400">Carregando...</div>
+        <div className="text-blue-400">Carregando...</div>
       </div>
     )
   }
@@ -93,7 +93,7 @@ export default function IngredientsPage() {
       {ingredients.length === 0 ? (
         <Card>
           <CardContent className="text-center py-16">
-            <Wheat className="w-12 h-12 mx-auto mb-3 text-pink-200" />
+            <Wheat className="w-12 h-12 mx-auto mb-3 text-blue-200" />
             <p className="text-gray-500 mb-4">Nenhum ingrediente cadastrado ainda</p>
             <Link href="/ingredientes/novo">
               <Button>Cadastrar primeiro ingrediente</Button>
@@ -139,7 +139,7 @@ export default function IngredientsPage() {
                     <span>Qtd. comprada</span>
                     <span className="font-medium">{ingredient.purchaseQuantity} {unitLabels[ingredient.unit]}</span>
                   </div>
-                  <div className="flex justify-between text-pink-700 font-semibold border-t border-pink-50 pt-1 mt-1">
+                  <div className="flex justify-between text-blue-600 font-semibold border-t border-blue-50 pt-1 mt-1">
                     <span>Custo por {unitLabels[ingredient.unit]}</span>
                     <span>{formatCurrency(ingredient.costPerUnit)}</span>
                   </div>

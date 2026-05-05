@@ -193,7 +193,7 @@ export default function EditRecipePage({ params }: { params: Promise<{ id: strin
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-pink-400">Carregando...</div>
+        <div className="text-blue-400">Carregando...</div>
       </div>
     )
   }
@@ -298,7 +298,7 @@ export default function EditRecipePage({ params }: { params: Promise<{ id: strin
             {items.length > 0 ? (
               <div className="space-y-2">
                 {items.map((item, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-pink-50 rounded-lg p-2.5">
+                  <div key={index} className="flex items-center gap-2 bg-blue-50 rounded-lg p-2.5">
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-800 truncate">{item.label}</div>
                       <div className="text-xs text-gray-500">
@@ -324,7 +324,7 @@ export default function EditRecipePage({ params }: { params: Promise<{ id: strin
         </Card>
 
         {totalCost > 0 && (
-          <Card className="bg-pink-50 border-pink-200">
+          <Card className="bg-blue-50 border-blue-200">
             <CardContent className="p-4">
               <h3 className="font-semibold text-pink-800 mb-2">Resumo de Custos</h3>
               <div className="space-y-1 text-sm">
@@ -333,7 +333,7 @@ export default function EditRecipePage({ params }: { params: Promise<{ id: strin
                   <span className="font-medium">{formatCurrency(totalCost)}</span>
                 </div>
                 {form.yieldQuantity && (
-                  <div className="flex justify-between text-pink-700 font-semibold">
+                  <div className="flex justify-between text-blue-600 font-semibold">
                     <span>Custo por {form.yieldUnit || 'unidade'}</span>
                     <span>{formatCurrency(costPerUnit)}</span>
                   </div>

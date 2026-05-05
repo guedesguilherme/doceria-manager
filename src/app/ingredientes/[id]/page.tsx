@@ -103,7 +103,7 @@ export default function EditIngredientPage({ params }: { params: Promise<Params>
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-pink-400">Carregando...</div>
+        <div className="text-blue-400">Carregando...</div>
       </div>
     )
   }
@@ -184,12 +184,12 @@ export default function EditIngredientPage({ params }: { params: Promise<Params>
             </div>
 
             {previewCost > 0 && (
-              <div className="bg-pink-50 rounded-lg p-3 border border-pink-100">
-                <p className="text-sm text-pink-600">
+              <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                <p className="text-sm text-blue-500">
                   Custo por {form.unit || 'unidade'}:{' '}
                   <span className="font-bold">{formatCurrency(previewCost)}</span>
                 </p>
-                <p className="text-xs text-pink-400 mt-0.5">
+                <p className="text-xs text-blue-400 mt-0.5">
                   Calculado automaticamente: {formatCurrency(Number(form.purchasePrice))} ÷ {form.purchaseQuantity} {form.unit}
                 </p>
               </div>

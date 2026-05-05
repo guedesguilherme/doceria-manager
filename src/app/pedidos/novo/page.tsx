@@ -247,7 +247,7 @@ export default function NovoPedidoPage() {
             {items.length > 0 && (
               <div className="space-y-2">
                 {items.map((item, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-pink-50 rounded-lg p-2.5">
+                  <div key={index} className="flex items-center gap-2 bg-blue-50 rounded-lg p-2.5">
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-800">{item.recipeName}</div>
                       <div className="text-xs text-gray-500">
@@ -306,7 +306,7 @@ export default function NovoPedidoPage() {
             </div>
 
             {totalAmount > 0 && (
-              <div className="bg-pink-50 rounded-lg p-3 text-sm space-y-1">
+              <div className="bg-blue-50 rounded-lg p-3 text-sm space-y-1">
                 <div className="flex justify-between text-gray-700">
                   <span>Total do pedido</span>
                   <span className="font-semibold">{formatCurrency(totalAmount)}</span>
@@ -317,7 +317,7 @@ export default function NovoPedidoPage() {
                       <span>Sinal</span>
                       <span>- {formatCurrency(Number(form.signalAmount))}</span>
                     </div>
-                    <div className="flex justify-between text-pink-700 font-semibold border-t border-pink-200 pt-1">
+                    <div className="flex justify-between text-blue-600 font-semibold border-t border-blue-200 pt-1">
                       <span>Restante</span>
                       <span>{formatCurrency(remaining)}</span>
                     </div>
