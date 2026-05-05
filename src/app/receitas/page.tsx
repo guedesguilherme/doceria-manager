@@ -61,7 +61,7 @@ export default function RecipesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-blue-400">Carregando...</div>
+        <div className="text-mint-400">Carregando...</div>
       </div>
     )
   }
@@ -84,7 +84,7 @@ export default function RecipesPage() {
       {recipes.length === 0 ? (
         <Card>
           <CardContent className="text-center py-16">
-            <CakeSlice className="w-12 h-12 mx-auto mb-3 text-blue-200" />
+            <CakeSlice className="w-12 h-12 mx-auto mb-3 text-mint-200" />
             <p className="text-gray-500 mb-4">Nenhuma receita cadastrada ainda</p>
             <Link href="/receitas/nova">
               <Button>Cadastrar primeira receita</Button>
@@ -126,12 +126,12 @@ export default function RecipesPage() {
                     </div>
                   </div>
 
-                  <div className="mt-3 space-y-1 text-sm border-t border-blue-50 pt-2">
+                  <div className="mt-3 space-y-1 text-sm border-t border-mint-50 pt-2">
                     <div className="flex justify-between text-gray-600">
                       <span>Custo total</span>
                       <span className="font-medium">{formatCurrency(recipe.totalCost ?? 0)}</span>
                     </div>
-                    <div className="flex justify-between text-blue-600 font-semibold">
+                    <div className="flex justify-between text-mint-600 font-semibold">
                       <span>Custo por {recipe.yieldUnit}</span>
                       <span>{formatCurrency(costPerUnit)}</span>
                     </div>

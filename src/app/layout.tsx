@@ -1,18 +1,32 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { Sidebar } from '@/components/layout/sidebar'
 import { MobileHeader } from '@/components/layout/header'
 import { Toaster } from '@/components/ui/toaster'
 import { PWARegister } from '@/components/pwa-register'
 
-const inter = Inter({ subsets: ['latin'] })
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+export const viewport: Viewport = {
+  themeColor: '#4A8C8C',
+}
 
 export const metadata: Metadata = {
   title: 'MM Bolos',
   description: 'Sistema de gestão para confeitaria',
   manifest: '/manifest.json',
-  themeColor: '#60a5fa',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -26,11 +40,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" className={inter.className} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/logo-selo.png" />
       </head>
-      <body className="min-h-screen bg-blue-50/30">
+      <body className="min-h-screen bg-chantilly font-sans">
         <div className="flex min-h-screen">
           <Sidebar />
           <div className="flex-1 flex flex-col min-h-screen lg:min-h-0">

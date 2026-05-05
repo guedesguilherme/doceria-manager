@@ -146,12 +146,12 @@ export default function NovoIngredientePage() {
             </div>
 
             {previewCost > 0 && (
-              <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
-                <p className="text-sm text-blue-500">
+              <div className="bg-mint-50 rounded-lg p-3 border border-mint-100">
+                <p className="text-sm text-mint-500">
                   Custo por {form.unit || 'unidade'}:{' '}
                   <span className="font-bold">{formatCurrency(previewCost)}</span>
                 </p>
-                <p className="text-xs text-blue-400 mt-0.5">
+                <p className="text-xs text-mint-400 mt-0.5">
                   Calculado automaticamente: {formatCurrency(Number(form.purchasePrice))} ÷ {form.purchaseQuantity} {form.unit}
                 </p>
               </div>

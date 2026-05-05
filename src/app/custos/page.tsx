@@ -110,7 +110,7 @@ export default function CustosPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-blue-400">Carregando...</div>
+        <div className="text-mint-400">Carregando...</div>
       </div>
     )
   }
@@ -129,7 +129,7 @@ export default function CustosPage() {
       </div>
 
       {costs.length > 0 && (
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-mint-50 border-mint-200">
           <CardContent className="p-4">
             <h3 className="font-semibold text-pink-800 mb-2">Rateio Estimado</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
@@ -143,7 +143,7 @@ export default function CustosPage() {
               </div>
               <div>
                 <div className="text-gray-500">Custo por produção*</div>
-                <div className="font-semibold text-blue-600">{formatCurrency(allocationPerProduction)}</div>
+                <div className="font-semibold text-mint-600">{formatCurrency(allocationPerProduction)}</div>
               </div>
             </div>
             <p className="text-xs text-gray-400 mt-2">
@@ -156,7 +156,7 @@ export default function CustosPage() {
       {costs.length === 0 ? (
         <Card>
           <CardContent className="text-center py-16">
-            <FlaskConical className="w-12 h-12 mx-auto mb-3 text-blue-200" />
+            <FlaskConical className="w-12 h-12 mx-auto mb-3 text-mint-200" />
             <p className="text-gray-500 mb-4">Nenhum custo indireto cadastrado</p>
             <Button onClick={openCreate}>Cadastrar primeiro custo</Button>
           </CardContent>
@@ -187,7 +187,7 @@ export default function CustosPage() {
                     </Button>
                   </div>
                 </div>
-                <div className="mt-3 text-sm font-semibold text-blue-600">
+                <div className="mt-3 text-sm font-semibold text-mint-600">
                   {formatCurrency(cost.value)}
                   <span className="text-gray-400 font-normal text-xs">
                     {cost.type === 'fixo_mensal' ? '/mês' : '/unidade'}

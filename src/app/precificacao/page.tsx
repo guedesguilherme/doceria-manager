@@ -113,7 +113,7 @@ function PrecificacaoContent() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
                 <span>1x</span>
-                <span className="font-bold text-blue-600 text-lg">{markup.toFixed(1)}x</span>
+                <span className="font-bold text-mint-600 text-lg">{markup.toFixed(1)}x</span>
                 <span>5x</span>
               </div>
               <Slider
@@ -131,8 +131,8 @@ function PrecificacaoContent() {
                     onClick={() => setMarkup(m)}
                     className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                       Math.abs(markup - m) < 0.05
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                        ? 'bg-mint-500 text-white'
+                        : 'bg-mint-50 text-mint-600 hover:bg-mint-100'
                     }`}
                   >
                     {m}x
@@ -144,23 +144,23 @@ function PrecificacaoContent() {
 
           {loading ? (
             <Card>
-              <CardContent className="py-8 text-center text-blue-400">
+              <CardContent className="py-8 text-center text-mint-400">
                 Calculando...
               </CardContent>
             </Card>
           ) : result && pricing && recipe ? (
             <>
-              <Card className="border-blue-200">
+              <Card className="border-mint-200">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-blue-500" />
+                    <TrendingUp className="w-4 h-4 text-mint-500" />
                     {recipe.name}
                     <Badge variant="secondary">Rende {recipe.yieldQuantity} {recipe.yieldUnit}</Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="bg-blue-50 rounded-lg p-3 space-y-2">
-                    <h4 className="text-xs font-semibold text-blue-500 uppercase tracking-wide">Custo por {recipe.yieldUnit}</h4>
+                  <div className="bg-mint-50 rounded-lg p-3 space-y-2">
+                    <h4 className="text-xs font-semibold text-mint-500 uppercase tracking-wide">Custo por {recipe.yieldUnit}</h4>
 
                     <div className="space-y-1.5 text-sm">
                       <div className="flex justify-between text-gray-700">
@@ -171,14 +171,14 @@ function PrecificacaoContent() {
                         <span>Custos indiretos</span>
                         <span className="font-medium">{formatCurrency(pricing.indirectCostPerUnit)}</span>
                       </div>
-                      <div className="flex justify-between text-gray-900 font-semibold border-t border-blue-200 pt-1.5">
+                      <div className="flex justify-between text-gray-900 font-semibold border-t border-mint-200 pt-1.5">
                         <span>Custo total por {recipe.yieldUnit}</span>
                         <span>{formatCurrency(pricing.totalCostPerUnit)}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-500 rounded-xl p-4 text-white">
+                  <div className="bg-gradient-to-r from-mint-500 to-mint-500 rounded-xl p-4 text-white">
                     <div className="text-xs font-medium opacity-80 mb-1">
                       Preço sugerido (markup {markup.toFixed(1)}x) por {recipe.yieldUnit}
                     </div>
@@ -204,7 +204,7 @@ function PrecificacaoContent() {
                       <span>Total</span>
                       <span>{formatCurrency(pricing.totalCostPerUnit * recipe.yieldQuantity)}</span>
                     </div>
-                    <div className="flex justify-between font-semibold text-blue-600 border-t border-gray-200 pt-1">
+                    <div className="flex justify-between font-semibold text-mint-600 border-t border-gray-200 pt-1">
                       <span>Receita total ({markup.toFixed(1)}x)</span>
                       <span>{formatCurrency(pricing.suggestedPrice * recipe.yieldQuantity)}</span>
                     </div>
@@ -278,7 +278,7 @@ function PrecificacaoContent() {
       {!selectedRecipe && (
         <Card>
           <CardContent className="py-16 text-center">
-            <TrendingUp className="w-12 h-12 mx-auto mb-3 text-blue-200" />
+            <TrendingUp className="w-12 h-12 mx-auto mb-3 text-mint-200" />
             <p className="text-gray-500">Selecione uma receita para calcular o preço</p>
           </CardContent>
         </Card>
@@ -289,7 +289,7 @@ function PrecificacaoContent() {
 
 export default function PrecificacaoPage() {
   return (
-    <Suspense fallback={<div className="text-blue-400 text-center py-16">Carregando...</div>}>
+    <Suspense fallback={<div className="text-mint-400 text-center py-16">Carregando...</div>}>
       <PrecificacaoContent />
     </Suspense>
   )

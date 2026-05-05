@@ -47,7 +47,7 @@ export function getStatusColor(status: string): string {
     case 'Pendente':
       return 'bg-yellow-100 text-yellow-800 border-yellow-200'
     case 'Em produção':
-      return 'bg-blue-100 text-blue-800 border-blue-200'
+      return 'bg-mint-100 text-blue-800 border-mint-200'
     case 'Pronto':
       return 'bg-green-100 text-green-800 border-green-200'
     case 'Entregue':
